@@ -2,37 +2,54 @@
 
 An AI-powered investment analysis tool that combines real-time market data with artificial intelligence to provide automated stock analysis and professional reports.
 
-## Features
+## Project Overview
+
+This project demonstrates the integration of:
+- Real-time market data analysis
+- AI-powered investment insights
+- Professional report generation
+- Interactive data visualization
+
+## Key Features
 
 - **Real-time Stock Analysis**
-  - Live market data integration
-  - Interactive price charts with candlestick patterns
-  - Moving averages (20-day and 50-day)
-  - Volume analysis and trends
+  - Live market data visualization
+  - Interactive price charts
+  - Moving averages analysis
+  - Volume tracking
 
 - **AI-Powered Insights**
-  - Automated investment thesis generation
-  - Technical analysis interpretation
+  - Automated investment thesis
   - Risk assessment
+  - Market trend analysis
   - Strategic recommendations
 
 - **Professional Reporting**
-  - Automated PDF report generation
-  - Company performance metrics
-  - Technical indicators analysis
-  - Structured investment recommendations
+  - Automated PDF reports
+  - Performance metrics
+  - Technical analysis
+  - Investment recommendations
 
 ## Technical Stack
 
-- **Frontend:** Streamlit
-- **Data Source:** Alpha Vantage API
-- **AI Integration:** OpenAI GPT-4
-- **Data Processing:** Pandas, NumPy
-- **Visualization:** Plotly
-- **Report Generation:** FPDF
+- Streamlit for web interface
+- Alpha Vantage for market data
+- OpenAI GPT-4 for analysis
+- Plotly for interactive charts
+- FPDF for report generation
 
-## Setup Instructions
+## Project Context
 
-1. Clone the repository
-```bash
-git clone https://github.com/[your-username]/investment-research-assistant.git
+This project was developed as part of my journey transitioning into AI consulting, demonstrating the ability to:
+- Integrate multiple APIs
+- Implement AI-powered analysis
+- Create professional-grade reporting
+- Build practical business solutions
+
+## Business Value
+
+This tool demonstrates how AI can enhance investment research by:
+- Automating routine analysis tasks
+- Providing data-driven insights
+- Generating professional client-ready reports
+- Offering scalable investment research capabilities
