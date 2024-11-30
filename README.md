@@ -35,6 +35,7 @@ This project demonstrates the integration of:
 - Streamlit for web interface
 - Alpha Vantage for market data
 - OpenAI GPT-4 for analysis
+- Pandas & NumPy for data processing
 - Plotly for interactive charts
 - FPDF for report generation
 
