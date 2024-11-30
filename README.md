@@ -54,3 +54,18 @@ This tool demonstrates how AI can enhance investment research by:
 - Providing data-driven insights
 - Generating professional client-ready reports
 - Offering scalable investment research capabilities
+
+## Future Enhancements
+- Multiple stock comparison
+- Portfolio analysis
+- Sentiment analysis from news sources
+- Interactive Chart Features:
+  - Zoom and pan controls
+  - Dynamic period selection
+  - Technical indicator toggles
+  - Custom chart annotations
+  - Real-time data updates
+- Enhanced technical indicators
+- Custom report templates
+- Sector-wise analysis
+- Risk metrics dashboard
