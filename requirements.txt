@@ -4,3 +4,5 @@ alpha_vantage
 plotly
 openai
 python-dotenv
+numpy
+fpdf
