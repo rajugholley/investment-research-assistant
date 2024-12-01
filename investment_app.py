@@ -187,45 +187,54 @@ def generate_stock_analysis(symbol, df, company_name):
     
     # Construct the prompt
     prompt = f"""
-    As an investment analyst, provide a professional analysis of {company_name} ({symbol}).
+    As an expert investment analyst, provide a detailed, data-driven analysis of {symbol} based on the following metrics:
 
-    Key Data Points:
+    Current Market Data:
     - Current Price: ${latest_price:.2f}
-    - Recent Price Change: {price_change:.2f}%
-    - Volatility: {volatility:.2f}%
+    - 24h Change: {price_change:.2f}%
+    - 1-Week Trend: {week_trend:.2f}%
+    - 1-Month Trend: {month_trend:.2f}%
+    - Annual Volatility: {volatility:.2f}%
     
-    Please provide your analysis in the following format:
+    Technical Indicators:
+    - 20-Day Moving Average: ${ma20:.2f}
+    - 50-Day Moving Average: ${ma50:.2f}
+    - Volume vs Average: {vol_change:.2f}%
+    - Daily Trading Volume: {df['Volume'][0]:,.0f}
 
-    EXECUTIVE SUMMARY
-    Provide a 2-3 sentence overview of your key findings and main recommendation.
+    Please provide a comprehensive analysis with these specific requirements:
 
-    INVESTMENT THESIS
-    1. Market Analysis
-    - Current price trend and trading pattern
-    - Market positioning and momentum
+    1. EXECUTIVE SUMMARY:
+    - Start with key price action observations
+    - Highlight critical technical levels
+    - State clear directional bias based on data
     
-    2. Technical Analysis
-    - Key price trends and patterns
-    - Moving average implications
-    - Volume analysis insights
-
-    RISK ASSESSMENT
-    1. Market Risks
-    - Volatility analysis and patterns
-    - Current market condition impacts
+    2. TECHNICAL ANALYSIS:
+    - Analyze price relative to moving averages
+    - Evaluate volume patterns and implications
+    - Identify specific support/resistance levels
+    - Compare current volatility to historical patterns
     
-    2. Technical Risks
-    - Support/resistance levels
-    - Technical warning signs
-    - Risk mitigation factors
-
-    RECOMMENDATION
-    Provide a clear, actionable recommendation including:
-    - Time horizon
-    - Entry/exit points
-    - Key metrics to monitor
+    3. RISK ASSESSMENT:
+    - Quantify downside risks using specific price levels
+    - Identify technical warning signs
+    - Consider volatility-based stop levels
+    - Analyze volume-based risk factors
     
-    Keep the language professional but clear, avoiding unnecessary jargon.
+    4. SPECIFIC RECOMMENDATIONS:
+    - Provide exact entry price ranges
+    - Set specific stop-loss levels
+    - Define clear profit targets
+    - Suggest position sizing based on volatility
+    
+    Requirements:
+    - Use actual numbers and specific price levels
+    - Avoid generic statements
+    - Base all conclusions on provided data
+    - Highlight unusual patterns if any
+    - Consider both bullish and bearish scenarios
+    
+    Your analysis should be precise and actionable, suitable for professional portfolio managers.
 
     """
 
