@@ -10,6 +10,7 @@ import numpy
 from fpdf import FPDF
 import os
 from datetime import datetime
+import traceback
 
 class AnalysisReport(FPDF):
     def header(self):
@@ -177,81 +178,97 @@ def get_stock_data(symbol):
         return None
     
 def generate_stock_analysis(symbol, df, company_name):
-    """
-    Generate AI analysis focusing on investment thesis and risk assessment
-    """
-    # Prepare data points for analysis
-    latest_price = df['Close'][0]
-    price_change = ((df['Close'][0] - df['Close'][1]) / df['Close'][1]) * 100
-    volatility = df['Close'].pct_change().std() * numpy.sqrt(252)  # Annualized volatility
-    
-    # Construct the prompt
-    prompt = f"""
-    As an expert investment analyst, provide a detailed, data-driven analysis of {symbol} based on the following metrics:
+   """
+   Generate AI analysis with more specific data points
+   """
+   try:
+       # Calculate basic metrics
+       latest_price = df['Close'][0]
+       previous_price = df['Close'][1]
+       price_change = ((latest_price - previous_price) / previous_price) * 100
+       
+       # Calculate volume metrics
+       vol_avg = df['Volume'].mean()
+       vol_change = ((df['Volume'][0] - vol_avg) / vol_avg) * 100
+       
+       # Calculate trend metrics
+       one_week_ago = min(5, len(df)-1)  # Get 5 days ago or last available day
+       one_month_ago = min(20, len(df)-1)  # Get 20 days ago or last available day
+       
+       week_trend = ((latest_price - df['Close'][one_week_ago]) / df['Close'][one_week_ago]) * 100
+       month_trend = ((latest_price - df['Close'][one_month_ago]) / df['Close'][one_month_ago]) * 100
+       
+       # Calculate volatility and moving averages
+       daily_returns = df['Close'].pct_change()
+       volatility = daily_returns.std() * numpy.sqrt(252)
+       
+       ma20 = df['Close'].rolling(window=20).mean().iloc[-1] if len(df) >= 20 else df['Close'].mean()
+       ma50 = df['Close'].rolling(window=50).mean().iloc[-1] if len(df) >= 50 else df['Close'].mean()
 
-    Current Market Data:
-    - Current Price: ${latest_price:.2f}
-    - 24h Change: {price_change:.2f}%
-    - 1-Week Trend: {week_trend:.2f}%
-    - 1-Month Trend: {month_trend:.2f}%
-    - Annual Volatility: {volatility:.2f}%
-    
-    Technical Indicators:
-    - 20-Day Moving Average: ${ma20:.2f}
-    - 50-Day Moving Average: ${ma50:.2f}
-    - Volume vs Average: {vol_change:.2f}%
-    - Daily Trading Volume: {df['Volume'][0]:,.0f}
+       # Construct more detailed prompt
+       prompt = f"""
+       As an expert investment analyst, provide a detailed, data-driven analysis of {symbol} based on the following metrics:
 
-    Please provide a comprehensive analysis with these specific requirements:
+       Current Market Data:
+       - Current Price: ${latest_price:.2f}
+       - 24h Change: {price_change:.2f}%
+       - 1-Week Trend: {week_trend:.2f}%
+       - 1-Month Trend: {month_trend:.2f}%
+       - Annual Volatility: {volatility:.2f}%
+       
+       Technical Indicators:
+       - 20-Day Moving Average: ${ma20:.2f}
+       - 50-Day Moving Average: ${ma50:.2f}
+       - Volume vs Average: {vol_change:.2f}%
+       - Daily Trading Volume: {df['Volume'][0]:,.0f}
 
-    1. EXECUTIVE SUMMARY:
-    - Start with key price action observations
-    - Highlight critical technical levels
-    - State clear directional bias based on data
-    
-    2. TECHNICAL ANALYSIS:
-    - Analyze price relative to moving averages
-    - Evaluate volume patterns and implications
-    - Identify specific support/resistance levels
-    - Compare current volatility to historical patterns
-    
-    3. RISK ASSESSMENT:
-    - Quantify downside risks using specific price levels
-    - Identify technical warning signs
-    - Consider volatility-based stop levels
-    - Analyze volume-based risk factors
-    
-    4. SPECIFIC RECOMMENDATIONS:
-    - Provide exact entry price ranges
-    - Set specific stop-loss levels
-    - Define clear profit targets
-    - Suggest position sizing based on volatility
-    
-    Requirements:
-    - Use actual numbers and specific price levels
-    - Avoid generic statements
-    - Base all conclusions on provided data
-    - Highlight unusual patterns if any
-    - Consider both bullish and bearish scenarios
-    
-    Your analysis should be precise and actionable, suitable for professional portfolio managers.
+       Please provide a comprehensive analysis with these specific requirements:
 
-    """
+       1. EXECUTIVE SUMMARY:
+       - Start with key price action observations
+       - Highlight critical technical levels
+       - State clear directional bias based on data
+       
+       2. TECHNICAL ANALYSIS:
+       - Analyze price relative to moving averages
+       - Evaluate volume patterns and implications
+       - Identify specific support/resistance levels
+       - Compare current volatility to historical patterns
+       
+       3. RISK ASSESSMENT:
+       - Quantify downside risks using specific price levels
+       - Identify technical warning signs
+       - Consider volatility-based stop levels
+       - Analyze volume-based risk factors
+       
+       4. SPECIFIC RECOMMENDATIONS:
+       - Provide exact entry price ranges
+       - Set specific stop-loss levels
+       - Define clear profit targets
+       - Suggest position sizing based on volatility
+       
+       Requirements:
+       - Use actual numbers and specific price levels
+       - Avoid generic statements
+       - Base all conclusions on provided data
+       - Highlight unusual patterns if any
+       - Consider both bullish and bearish scenarios
+       
+       Your analysis should be precise and actionable, suitable for professional portfolio managers.
+       """
 
-    try:
-        # Call OpenAI API using the new format
-        client = openai.OpenAI()
-        response = client.chat.completions.create(
-            model="gpt-4-0125-preview",
-            messages=[
-                {"role": "system", "content": "You are a very senior professional investment analyst writing clear, actionable analysis for portfolio managers."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"Error generating analysis: {str(e)}"
+       client = openai.OpenAI()
+       response = client.chat.completions.create(
+           model="gpt-4-0125-preview",
+           messages=[
+               {"role": "system", "content": "You are an expert quantitative analyst who provides specific, data-driven investment analysis. Always use concrete numbers and avoid generic advice."},
+               {"role": "user", "content": prompt}
+           ]
+       )
+       return response.choices[0].message.content
+       
+   except Exception as e:
+       return f"Error in analysis generation: {str(e)}\nTrace: {traceback.format_exc()}"
 #Following code creates the User Interface Elements:
 
 # Title
